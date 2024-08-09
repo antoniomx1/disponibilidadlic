@@ -42,6 +42,9 @@ class Seleccion(db.Model):
     docente_id = db.Column(db.Integer, db.ForeignKey('dim_docentes.id'), nullable=False)
     asignatura_id = db.Column(db.Integer, db.ForeignKey('dim_asignaturas.id'), nullable=False)
     telefono_celular = db.Column(db.String(20), nullable=False)
+    cedulalic = db.Column(db.String(255), nullable=True)  # Nuevo campo
+    cedulamaster = db.Column(db.String(255), nullable=True)  # Nuevo campo
+    ceduladocto = db.Column(db.String(255), nullable=True)  # Nuevo campo
 
 def convert_image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
@@ -77,13 +80,40 @@ def seleccionar():
     asignaturas_seleccionadas = request.form.getlist('asignaturas')
     docente_id = request.form['docente_id']
     telefono_celular = request.form['telefono_celular']
+    cedulalic = request.form.get('cedulalic')
+    cedulamaster = request.form.get('cedulamaster')
+    ceduladocto = request.form.get('ceduladocto')
+
+    # Imprimir para depurar
+    print("Docente ID:", docente_id)
+    print("Asignaturas seleccionadas:", asignaturas_seleccionadas)
+    print("Teléfono Celular:", telefono_celular)
+    print("Cédula Licenciatura:", cedulalic)
+    print("Cédula Maestría:", cedulamaster)
+    print("Cédula Doctorado:", ceduladocto)
+
     if len(asignaturas_seleccionadas) > 3:
         return "No puedes seleccionar más de 3 asignaturas"
-    for asignatura_id in asignaturas_seleccionadas:
-        seleccion = Seleccion(docente_id=docente_id, asignatura_id=asignatura_id, telefono_celular=telefono_celular)
-        db.session.add(seleccion)
-    db.session.commit()
-    docente = Docente.query.get(docente_id)
+    
+    try:
+        for asignatura_id in asignaturas_seleccionadas:
+            seleccion = Seleccion(
+                docente_id=docente_id, 
+                asignatura_id=asignatura_id, 
+                telefono_celular=telefono_celular,
+                cedulalic=cedulalic,
+                cedulamaster=cedulamaster,
+                ceduladocto=ceduladocto
+            )
+            db.session.add(seleccion)
+        
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print("Error al guardar en la base de datos:", e)
+        return "Hubo un error al guardar la selección."
+
+    docente = db.session.get(Docente, docente_id)
     return render_template('finalizacion.html', docente_nombre=docente.nombre, correo_electronico=docente.correo_electronico)
 
 if __name__ == '__main__':
