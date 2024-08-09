@@ -5,68 +5,108 @@
     <title>Selección de Asignaturas</title>
     <style>
         body {
-            background-image: url('data:image/png;base64,{{ image_base64 }}');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
+            background-color: white; /* Fondo blanco para toda la página */
             margin: 0;
-            padding-top: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            color: black;
         }
-        .content {
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 1000px; /* Aumentar el ancho máximo */
-            margin: auto;
-            text-align: center;
-            margin-top: 50px; /* Ajuste para subir el cuadro */
-        }
-        .tables-container {
+
+        .container {
             display: flex;
             justify-content: space-between;
-            gap: 20px;
+            width: 90%; /* Ajusta el tamaño para que se mantenga responsivo */
+            max-width: 1200px; /* Tamaño máximo del contenedor */
+            margin-top: 20px;
         }
+
+        .content, .form-content {
+            background-color: rgba(0, 0, 0, 0.5); /* Cuadro gris oscuro */
+            padding: 20px;
+            border-radius: 10px;
+            width: 48%; /* Cada cuadro ocupa la mitad del espacio */
+            text-align: center;
+        }
+
         h1, p, h2 {
             color: white;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         th, td {
             padding: 10px;
             border: 1px solid white;
         }
+
         th {
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
         }
+
         td.center {
             text-align: center;
         }
-        label, input, button {
-            color: black;
-        }
-        label[for="telefono_celular"] {
+
+        label {
             color: white;
+            display: block;
+            margin-top: 10px;
+            text-align: left; /* Para alinear el texto de los labels */
         }
+
+        input[type="text"] {
+            width: 200px; /* Tamaño reducido y fijo para campos de entrada */
+            padding: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: white; /* Fondo blanco para los campos de entrada */
+        }
+
         button {
             margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #dddddd;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left; /* Alinear el grupo de formularios a la izquierda */
+        }
+
+        .footer-image {
+            background-image: url('/static/utelmarco.png'); /* Ruta directa al archivo estático */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center; /* Centra la imagen */
+            height: 100px; /* Ajusta la altura según lo que necesites */
+            width: 100%;
+            margin-top: 20px; /* Espacio encima de la imagen */
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>Estimado/a docente {{ docente.nombre }}</h1>
-        <p>A continuación le presentamos dos tablas. En la primera aparecen las asignaturas que usted ha impartido este año y en la segunda tabla aparecen las asignaturas que usted puede impartir basándonos en su perfil profesional.</p>
-        <form method="post" action="{{ url_for('seleccionar') }}">
-            <input type="hidden" name="docente_id" value="{{ docente.id }}">
+    <div class="container">
+        <div class="content">
+            <h1>Estimado/a docente {{ docente.nombre }}</h1>
+            <p>A continuación le presentamos dos tablas. En la primera aparecen las asignaturas que usted ha impartido este año y en la segunda tabla aparecen las asignaturas que usted puede impartir basándonos en su perfil profesional.</p>
+            
             <div class="tables-container">
                 <!-- Primera tabla -->
                 <div class="table-wrapper">
@@ -87,8 +127,8 @@
                                     <td class="center"><input type="checkbox" name="asignaturas" value="{{ asignatura.id }}"></td>
                                     <td>{{ asignatura.nombre_asignatura }}</td>
                                     <td class="center">{{ imparticion.numero_veces }}</td>
-                                    <td class="center">{{ asignatura.bimestre }}</td> <!-- Ajustado -->
-                                    <td class="center">{{ asignatura.tipo }}</td> <!-- Ajustado -->
+                                    <td class="center">{{ asignatura.bimestre }}</td>
+                                    <td class="center">{{ asignatura.tipo }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -119,12 +159,39 @@
                     </table>
                 </div>
             </div>
-            <p>Por favor, comparta su número de celular con lada (código de área):</p>
-            <label for="telefono_celular">Número de teléfono celular:</label>
-            <input type="text" name="telefono_celular" required>
-            <br>
-            <button type="submit">Enviar</button>
-        </form>
+        </div>
+
+        <div class="form-content">
+            <form method="post" action="{{ url_for('seleccionar') }}">
+                <input type="hidden" name="docente_id" value="{{ docente.id }}"> <!-- Campo oculto para enviar el ID del docente -->
+                
+                <p>Por favor, complete la siguiente información importante:</p>
+                
+                <div class="form-group">
+                    <label for="telefono_celular">Número de teléfono celular:</label>
+                    <input type="text" name="telefono_celular" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cedulalic">Cédula Licenciatura:</label>
+                    <input type="text" name="cedulalic">
+                </div>
+
+                <div class="form-group">
+                    <label for="cedulamaster">Cédula Maestría:</label>
+                    <input type="text" name="cedulamaster">
+                </div>
+
+                <div class="form-group">
+                    <label for="ceduladocto">Cédula Doctorado:</label>
+                    <input type="text" name="ceduladocto">
+                </div>
+
+                <button type="submit">Enviar</button>
+            </form>
+
+            <div class="footer-image"></div> <!-- Marco al final del formulario -->
+        </div>
     </div>
 </body>
 </html>

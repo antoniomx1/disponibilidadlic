@@ -3,10 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Confirmación de Selección</title>
+    <style>
+        body {
+            background-color: white; /* Fondo blanco para toda la página */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            color: black;
+        }
+
+        .content {
+            background-color: rgba(0, 0, 0, 0.5); /* Cuadro gris oscuro */
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%; /* Ajusta el ancho del cuadro */
+            text-align: center;
+            margin-top: 50px; /* Espacio arriba del cuadro */
+        }
+
+        h1, p {
+            color: white;
+        }
+
+        .footer-image {
+            background-image: url('/static/utelmarco.png'); /* Ruta directa al archivo estático */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center; /* Centra la imagen */
+            height: 100px; /* Ajusta la altura según lo que necesites */
+            width: 100%;
+            margin-top: 20px; /* Espacio encima de la imagen */
+        }
+    </style>
 </head>
 <body>
-    <h1>Gracias, {{ docente_nombre }}!</h1>
-    <p>Hemos recibido su selección de asignaturas. Por favor, esté pendiente de su correo electrónico <strong>{{ correo_electronico }}</strong>, donde recibirá la confirmación de las materias que se le han asignado para el próximo bimestre.</p>
-    <p>¡Gracias por su colaboración!</p>
+    <div class="content">
+        <h1>Gracias, {{ docente_nombre }}!</h1>
+        <p>Hemos recibido su selección de asignaturas. Por favor, esté pendiente de su correo electrónico <strong>{{ correo_electronico }}</strong>, donde recibirá la confirmación de las materias que se le han asignado para el próximo bimestre.</p>
+        <p>¡Gracias por su colaboración!</p>
+    </div>
+
+    <div class="footer-image"></div> <!-- Marco al final del cuadro -->
 </body>
 </html>
